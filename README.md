@@ -16,13 +16,13 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 
 * 等
 
-![图片](dfiles/components.jpg)
+![部品图片](dfiles/components.jpg)
 
 #### 以上材料的连接，请查看dfiles目录里的stm32f103c8-io-ref.pdf
 
 杂乱的连接示意图
 
-![图片](dfiles/connection.jpg)
+![连接图片](dfiles/connection.jpg)
 
 #### 基本实现方式：
 通过ADC采样输入的声音信号，然后经过FFT转换，再转dB，然后在oled和LCD屏上显示。
@@ -32,7 +32,7 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 
 #### 演示图片
 
-![图片](dfiles/showpic.png)
+![演示图片](dfiles/showpic.png)
 
 
 
