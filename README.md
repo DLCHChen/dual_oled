@@ -18,7 +18,7 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 
 * 等
 
-![部品图片](dfiles/components.jpg "components")
+![部品图片](https://github.com/DLCHChen/dual_oled/raw/main/dfiles/components.jpg "components")
 
 ---
 
@@ -26,7 +26,7 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 
 杂乱的连接示意图
 
-![连接图片](dfiles/connection.jpg "connection")
+![连接图片](https://github.com/DLCHChen/dual_oled/raw/main/dfiles/connection.jpg "connection")
 
 ---
 
@@ -42,7 +42,7 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 
 #### 演示图片
 
-![演示图片](dfiles/showpic.png "showing")
+![演示图片](https://github.com/DLCHChen/dual_oled/raw/main/dfiles/showpic.png "showing")
 
 
 
