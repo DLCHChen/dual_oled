@@ -10,9 +10,12 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 ## 用到了以下的材料（如图所示）：
 * stm32f103c8 开发板
 
-* oled和lcd屏
+* oled和lcd屏<br>
+    &emsp;oled : 128x64 (iic或spi接口）<br>
+	&emsp;lcd : 128x96 (1.3  oled(color) - SSD1351 - spi接口)<br>
+	&emsp;&emsp;&nbsp;&nbsp;: 128x80 (0.96 oled(color) - ST7735 - spi接口)<br>
 
-* mic模块
+* mic模块 : MAX9812
 
 * 按键
 
@@ -47,6 +50,10 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 ### 图片位置 dfiles/showpic.png
 ![演示图片](dfiles/showpic.png "showing")
 
+
+128x64的oled
+### 双oled图片位置 dfiles/dual_oled.jpg
+![演示图片](dfiles/dual_oled.jpg "dual_oled")
 
 
 
