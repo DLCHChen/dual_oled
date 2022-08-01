@@ -47,15 +47,17 @@ It is a dual oled code for stm32f103c8 with mic and fft feature.
 
 ## 演示图片
 
-&emsp;&emsp;双LCD演示，分别接在iic（oled 128x64）和spi（LCD 128x96）上。
 
 ### 图片位置 dfiles/showpic.png
 ![演示图片](dfiles/showpic.png "showing")
 
-&emsp;&emsp;双128x64的oled演示，分别接在iic和spi上。
+&emsp;&emsp;双LCD演示，分别接在iic（oled 128x64）和spi（LCD 128x96）上。
+
 
 ### 双oled图片位置 dfiles/dual_oled.jpg
 ![演示图片](dfiles/dual_oled.jpg "dual_oled")
+
+&emsp;&emsp;双128x64的oled演示，分别接在iic和spi上。
 
 
 
