@@ -457,8 +457,15 @@ void OLED_WR_Bytes(u8* pdat,u8 mode)
 #endif
 
 #else
-extern void SPI_OLED_WR_Byte(u8 dat,u8 cmd);
-extern void SPI_OLED_WR_Bytes(u8 *pdat,u8 cmd);
+//extern void SPI_OLED_WR_Byte(u8 dat,u8 cmd);
+//extern void SPI_OLED_WR_Bytes(u8 *pdat,u8 cmd);
+
+void OLED_WR_Byte(u8 dat,u8 cmd)
+{
+}
+void OLED_WR_Bytes(u8 *pdat,u8 cmd)
+{
+}
 
 #endif
 

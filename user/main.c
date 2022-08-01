@@ -228,7 +228,7 @@ int main(void)
 	delay_init(56);
 	#endif
 	USART1_InitConfig(115200);
-	dbg_uart_print_str(" FOLED_0.2A\r\n");		//uart1
+	dbg_uart_print_str(" DOLED_0.5A\r\n");		//uart1
 	//dbgu_PrintLongInt(SystemCoreClock);
 	//dbg_uart_print_str("\r\n");
 	tim2_cnt2 = 0;
@@ -251,6 +251,10 @@ int main(void)
 #endif
 #ifdef OLED_USE_IIC
 	IIC_OLED_Init();
+#endif
+#ifdef SPI_OLED_0P96_BW_PANEL
+	SPI_OLED_ColorTurn(0);//0正常显示，1 反色显示
+	SPI_OLED_DisplayTurn(1);//0正常显示 1 屏幕翻转显示
 #endif
 #ifdef OLED_0P96_BW_PANEL
 	OLED_ColorTurn(0);//0正常显示，1 反色显示

@@ -2174,6 +2174,170 @@ void Fill_RAM(u16 Colour_RGB)
 
 #endif
 
+#ifdef SPI_OLED_0P96_BW_PANEL
+//反显函数
+void SPI_OLED_ColorTurn(u8 i)
+{
+	if(i==0)
+	{
+		SPI_OLED_WR_Byte(0xA6,OLED_CMD);//正常显示
+	}
+	if(i==1)
+	{
+		SPI_OLED_WR_Byte(0xA7,OLED_CMD);//反色显示
+	}
+}
+
+//屏幕旋转180度
+void SPI_OLED_DisplayTurn(u8 i)
+{
+	if(i==0)
+	{
+		SPI_OLED_WR_Byte(0xC8,OLED_CMD);//正常显示
+		SPI_OLED_WR_Byte(0xA1,OLED_CMD);
+	}
+	if(i==1)
+	{
+		SPI_OLED_WR_Byte(0xC0,OLED_CMD);//反转显示
+		SPI_OLED_WR_Byte(0xA0,OLED_CMD);
+	}
+}
+
+//画点
+//x:0~127
+//y:0~63
+void SPI_OLED_DrawPoint(u8 x,u8 y)
+{
+	u8 n;
+	u16 y0;
+	u8 shift_cnt;
+	u16 offset;
+	u8 *pBuf;
+	pBuf = OLED_GRAM;
+
+	if((x > 128)||(y > 64))
+	{
+		return;
+	}
+
+	y0 = (y & 0xF8) << 4;
+	shift_cnt = y&0x07;
+
+	n=1<<shift_cnt;
+
+	offset = y0 + (u16)x;
+	//OLED_GRAM[x][i]|=n;
+	pBuf[offset] |= n;
+}
+
+void SPI_OLED_Clear_Buff(void)
+{
+	u8 y,x;
+	u8 *pBuf;
+#ifdef OLED_0P96_BW_PANEL
+	//do nothing
+#else
+	pBuf = OLED_GRAM;
+	for(y=0;y<8;y++)
+	{
+	   for(x=0;x<128;x++)
+		{
+			//OLED_GRAM[x][y]=0;//清除所有数据
+			*pBuf++ = 0;
+		}
+	}
+#endif
+}
+
+void SPI_OLED_Refresh(void)
+{
+	u8 y,x;
+	u8 *pBuf;
+	pBuf = OLED_GRAM;
+	for(y=0; y<8; y++)
+	{
+		SPI_OLED_WR_Byte(0xb0+y,OLED_CMD); //设置行起始地址
+		SPI_OLED_WR_Byte(0x10,OLED_CMD);   //设置高列起始地址
+		SPI_OLED_WR_Byte(0x00,OLED_CMD);   //设置低列起始地址
+		#if 1
+		SPI_OLED_WR_Bytes(pBuf,OLED_DATA);
+		pBuf = pBuf + 128;
+		#else
+		for(x=0; x<128; x++)
+		{
+			//OLED_WR_Byte(OLED_GRAM[x][y],OLED_DATA);
+			OLED_WR_Byte(*pBuf++,OLED_DATA);
+		}
+		#endif
+	}
+}
+
+//清屏函数
+void SPI_OLED_Clear(void)
+{
+#ifdef OLED_0P96_BW_PANEL
+//do nothing
+#else
+	u8 y,x;
+	u8 *pBuf;
+	pBuf = OLED_GRAM;
+	for(y=0;y<8;y++)
+	{
+	   for(x=0;x<128;x++)
+		{
+			//OLED_GRAM[x][y]=0;//清除所有数据
+			*pBuf++ = 0;
+		}
+	}
+#endif
+	SPI_OLED_Refresh();//更新显示
+}
+
+void Spi_OLED_Init(void)
+{
+#ifdef OLED_USE_HW_SPI
+	Drv_SPI_Init();
+#endif
+
+	OLED_SPI_RST_Set();
+	delay_ms(50);
+	OLED_SPI_RST_Clr();//复位
+	delay_ms(100);
+	OLED_SPI_RST_Set();
+	delay_ms(200);
+
+	SPI_OLED_WR_Byte(0xAE,OLED_CMD);//--turn off oled panel
+	SPI_OLED_WR_Byte(0x00,OLED_CMD);//---set low column address
+	SPI_OLED_WR_Byte(0x10,OLED_CMD);//---set high column address
+	SPI_OLED_WR_Byte(0x40,OLED_CMD);//--set start line address  Set Mapping RAM Display Start Line (0x00~0x3F)
+	SPI_OLED_WR_Byte(0x81,OLED_CMD);//--set contrast control register
+	SPI_OLED_WR_Byte(0xCF,OLED_CMD);// Set SEG Output Current Brightness
+	SPI_OLED_WR_Byte(0xA1,OLED_CMD);//--Set SEG/Column Mapping     0xa0左右反置 0xa1正常
+	SPI_OLED_WR_Byte(0xC8,OLED_CMD);//Set COM/Row Scan Direction   0xc0上下反置 0xc8正常
+	SPI_OLED_WR_Byte(0xA6,OLED_CMD);//--set normal display
+	SPI_OLED_WR_Byte(0xA8,OLED_CMD);//--set multiplex ratio(1 to 64)
+	SPI_OLED_WR_Byte(0x3f,OLED_CMD);//--1/64 duty
+	SPI_OLED_WR_Byte(0xD3,OLED_CMD);//-set display offset	Shift Mapping RAM Counter (0x00~0x3F)
+	SPI_OLED_WR_Byte(0x00,OLED_CMD);//-not offset
+	SPI_OLED_WR_Byte(0xd5,OLED_CMD);//--set display clock divide ratio/oscillator frequency
+	SPI_OLED_WR_Byte(0x80,OLED_CMD);//--set divide ratio, Set Clock as 100 Frames/Sec
+	SPI_OLED_WR_Byte(0xD9,OLED_CMD);//--set pre-charge period
+	SPI_OLED_WR_Byte(0xF1,OLED_CMD);//Set Pre-Charge as 15 Clocks & Discharge as 1 Clock
+	SPI_OLED_WR_Byte(0xDA,OLED_CMD);//--set com pins hardware configuration
+	SPI_OLED_WR_Byte(0x12,OLED_CMD);
+	SPI_OLED_WR_Byte(0xDB,OLED_CMD);//--set vcomh
+	SPI_OLED_WR_Byte(0x40,OLED_CMD);//Set VCOM Deselect Level
+	SPI_OLED_WR_Byte(0x20,OLED_CMD);//-Set Page Addressing Mode (0x00/0x01/0x02)
+	SPI_OLED_WR_Byte(0x02,OLED_CMD);//
+	SPI_OLED_WR_Byte(0x8D,OLED_CMD);//--set Charge Pump enable/disable
+	SPI_OLED_WR_Byte(0x14,OLED_CMD);//--set(0x10) disable
+	SPI_OLED_WR_Byte(0xA4,OLED_CMD);// Disable Entire Display On (0xa4/0xa5)
+	SPI_OLED_WR_Byte(0xA6,OLED_CMD);// Disable Inverse Display On (0xa6/a7) 
+	SPI_OLED_WR_Byte(0xAF,OLED_CMD);
+	SPI_OLED_Clear();
+}
+
+#endif
 
 #define	Brightness	0x0f //0xFF
 #ifdef OLED_0P96_COLOR_PANEL

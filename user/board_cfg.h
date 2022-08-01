@@ -129,10 +129,7 @@ LED --- PB0,PC13
 
 #define OLED_USE_IIC		    1
 
-//#define OLED_USE_HW_IIC		1		//max. iic speed is 400KHz, so a frame reflash need 100ms!!!
-
 #define OLED_USE_SPI		    1
-#define OLED_USE_HW_SPI		    1
 
 #define OLED_SPI_CS_SOFT		1
 //#define OLED_SPI_ONLY_TX		1
@@ -140,11 +137,14 @@ LED --- PB0,PC13
 #define OLED_SPI_DATA_NO_CHK	1
 
 #ifdef OLED_USE_SPI
+#define OLED_USE_HW_SPI		    1
+#define SPI_OLED_0P96_BW_PANEL		1
 //#define OLED_1P3_COLOR_PANEL	1		//Display frame ratio 36MHz - NG; 18MHz - 9MHz - OK
-#define OLED_0P96_COLOR_PANEL	1		//Display frame ratio ??? ST7735s color 0.96 80x160 RGB565
+//#define OLED_0P96_COLOR_PANEL	1		//Display frame ratio ??? ST7735s color 0.96 80x160 RGB565
 #endif
 
 #ifdef OLED_USE_IIC
+//#define OLED_USE_HW_IIC		1		//max. iic speed is 400KHz, so a frame reflash need 100ms!!!
 #define OLED_0P96_BW_PANEL		1
 #endif
 

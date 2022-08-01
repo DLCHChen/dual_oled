@@ -1,8 +1,12 @@
 /*
+CFP
+2022 - 
 */
 
 #ifndef __SPI_OLED_H__
 #define __SPI_OLED_H__
+
+#include "board_cfg.h"
 
 //PA05 - TFT --SCL/SCK
 //PA07 - TFT --SDA/DIN
@@ -105,6 +109,15 @@ void ST7735_FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 void ST7735_DrawLine(u8 x1,u8 y1,u8 x2,u8 y2, u16 color);
 void ST7735_FillDraw_Test(uint8_t x, uint8_t y, uint16_t len,uint16_t color);
 
+#endif
+
+#ifdef SPI_OLED_0P96_BW_PANEL
+void SPI_OLED_ColorTurn(u8 i);
+void SPI_OLED_DisplayTurn(u8 i);
+void SPI_OLED_DrawPoint(u8 x,u8 y);
+void SPI_OLED_Refresh(void);
+void SPI_OLED_Clear(void);
+void SPI_OLED_Clear_Buff(void);
 #endif
 
 void Spi_OLED_Init(void);

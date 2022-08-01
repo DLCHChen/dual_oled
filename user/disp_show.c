@@ -174,7 +174,11 @@ u8 has_max_freq_pos;
 #define B_SHOW_POS_LIMIT		80
 #endif
 
-#ifdef OLED_0P96_BW_PANEL
+#if defined(OLED_0P96_BW_PANEL)||defined(SPI_OLED_0P96_BW_PANEL)
+#define OLED_0P96_BW_DRAW_OP    1
+#endif
+
+#ifdef OLED_0P96_BW_DRAW_OP
 #define C_SHOW_POS_LIMIT		64
 #endif
 
@@ -271,7 +275,7 @@ void Set_Mode_roll(void)
 	ST7735_FillRectangle(0,0,160,80,RGB565_Black);
 #endif
 
-#ifdef OLED_0P96_BW_PANEL
+#ifdef OLED_0P96_BW_DRAW_OP
 	OLED_Clear_Buff();
 #endif
 	fft_cut_magin = 0;
@@ -289,7 +293,7 @@ void Set_Mode_Up(void)
 		#ifdef OLED_0P96_COLOR_PANEL
 		ST7735_FillRectangle(0,0,160,80,RGB565_Black);
 		#endif
-		#ifdef OLED_0P96_BW_PANEL
+		#ifdef OLED_0P96_BW_DRAW_OP
 		OLED_Clear_Buff();
 		#endif
 		curr_mode++;
@@ -313,7 +317,7 @@ void Set_Mode_Down(void)
 		#ifdef OLED_0P96_COLOR_PANEL
 		ST7735_FillRectangle(0,0,160,80,RGB565_Black);
 		#endif
-		#ifdef OLED_0P96_BW_PANEL
+		#ifdef OLED_0P96_BW_DRAW_OP
 		OLED_Clear_Buff();
 		#endif
 		curr_mode--;
@@ -337,7 +341,7 @@ void Display_peak_freq_onoff(u8 sel)
 		#ifdef OLED_0P96_COLOR_PANEL
 		ST7735_FillRectangle(0,0,160,80,RGB565_Black);
 		#endif
-		#ifdef OLED_0P96_BW_PANEL
+		#ifdef OLED_0P96_BW_DRAW_OP
 		OLED_Clear_Buff();
 		#endif
 	}
@@ -1408,7 +1412,7 @@ void draw_freq_info_y(void)
 
 #endif
 
-#ifdef OLED_0P96_BW_PANEL
+#ifdef OLED_0P96_BW_DRAW_OP
 #define SHOW_FREQ_LINE_POS    48
 #define SHOW_FREQ_START_POS   16
 
@@ -1542,7 +1546,7 @@ void mic_apply_draw_wav(void)
 	{
 		wav_display_mode_zip();
 	}
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	OLED_Clear_Buff();
 	#endif
 	#ifdef OLED_1P3_COLOR_PANEL
@@ -1560,7 +1564,7 @@ void mic_apply_draw_wav(void)
 	{
 		sy = SHOW_POS_LIMIT;
 	}
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	sx = 127;
 	//draw first dot
 	OLED_DrawPoint(sx,sy);
@@ -1587,7 +1591,7 @@ void mic_apply_draw_wav(void)
 			offset = 128 - i*line_length;
 			SSD1351_DrawLine(sx,sy,offset,cur_fft_val,RGB565_Blue);
 			#endif
-			#ifdef OLED_0P96_BW_PANEL
+			#ifdef OLED_0P96_BW_DRAW_OP
 			offset = 128 - i*line_length;
 			OLED_DrawLine(sx,sy,offset,cur_fft_val);
 			#endif
@@ -1609,7 +1613,7 @@ void mic_apply_draw_wav(void)
 		sy = SHOW_POS_LIMIT;
 	}
 	//offset = 128 - line_length;
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	sx = 127;
 	//draw first dot
 	OLED_DrawPoint(sx,sy);
@@ -1650,7 +1654,7 @@ void mic_apply_draw_wav(void)
 			//offset = 128 - i*line_length;
 			SSD1351_DrawLine(sx,sy,offset,cur_fft_val,RGB565_Blue);
 			#endif
-			#ifdef OLED_0P96_BW_PANEL
+			#ifdef OLED_0P96_BW_DRAW_OP
 			//offset = 128 - i*line_length;
 			OLED_DrawLine(sx,sy,offset,cur_fft_val);
 			#endif
@@ -1692,7 +1696,7 @@ void mic_apply_draw_wav(void)
 	}
 #endif
 
-#ifdef OLED_0P96_BW_PANEL
+#ifdef OLED_0P96_BW_DRAW_OP
 	OLED_ShowCharR_8x16(0,48,'a');
 	OLED_ShowCharR_8x16(8,48,'w');
 	if(curr_mode == WAV_PROC_MODE_START)
@@ -1780,7 +1784,7 @@ void mic_apply_draw_wav(void)
 	SSD1351_WriteChar_8x16(120,64,'w',RGB565_Lgray,RGB565_Black);
 #endif
 
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 #ifdef DISP_FRAME_RATIO_30HZ
 	OLED_ShowCharR_8x16(120,48,'3');
 	OLED_ShowCharR_8x16(112,48,'0');
@@ -1816,7 +1820,12 @@ void mic_apply_draw_wav(void)
 	OLED_ShowPF_16x16(32,48,0);
 	OLED_ShowPF_16x16(16,48,9);
 	OLED_ShowPF_16x16(0,48,8);
+	#endif
+	#ifdef OLED_0P96_BW_PANEL
 	OLED_Refresh();
+	#endif
+	#ifdef SPI_OLED_0P96_BW_PANEL
+	SPI_OLED_Refresh();
 	#endif
 }
 
@@ -1847,7 +1856,7 @@ void mic_apply_demo_stripeZ_ff_dot(void)
 	{
 		cur_fft_val = (u8)xFFT_out[i];
 		e_cur_fft_val = cur_fft_val;
-		#ifdef OLED_0P96_BW_PANEL
+		#ifdef OLED_0P96_BW_DRAW_OP
 		if(cur_fft_val >= C_SHOW_POS_LIMIT)
 		{
 			cur_fft_val = C_SHOW_POS_LIMIT;
@@ -1868,7 +1877,7 @@ void mic_apply_demo_stripeZ_ff_dot(void)
 		#ifdef OLED_0P96_COLOR_PANEL
 		i_offset = 160 - i*bar_width;
 		#endif
-		#ifdef OLED_0P96_BW_PANEL
+		#ifdef OLED_0P96_BW_DRAW_OP
 		offset = 127 - i*bar_width;
 		#endif
 		#ifdef OLED_1P3_COLOR_PANEL
@@ -1885,7 +1894,7 @@ void mic_apply_demo_stripeZ_ff_dot(void)
 			ST7735_DrawVertical_Column((i_offset-bar_w_cnt),0,(u8)e_cur_fft_val,RGB565_PeacockGreen);
 			ST7735_DrawPoint((i_offset-bar_w_cnt),(u8)falling_y_pos[i],RGB565_Red);
 			#endif
-			#ifdef OLED_0P96_BW_PANEL
+			#ifdef OLED_0P96_BW_DRAW_OP
 			//OLED_DrawX_Vertical_Column((offset-bar_w_cnt),0,(u8)cur_fft_val,(u8)ff_actives[i]);
 			OLED_DrawX_Vertical_Column((offset-bar_w_cnt),0,(u8)cur_fft_val,(u8)falling_y_pos[i]);
 			//OLED_DrawY_dot((offset-bar_w_cnt),0,(u8)flying_y_pos[i]);
@@ -1985,7 +1994,7 @@ void mic_apply_demo_stripeZ_ff_dot(void)
 	SSD1351_WriteChar_8x16(120,64,afft_idx[fft_proc_mode],RGB565_Lgray,RGB565_Black);
 	#endif
 
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	#ifdef DISP_FRAME_RATIO_30HZ
 	OLED_ShowCharR_8x16(120,48,'3');
 	OLED_ShowCharR_8x16(112,48,'0');
@@ -2025,6 +2034,9 @@ void mic_apply_demo_stripeZ_ff_dot(void)
 	#ifdef OLED_0P96_BW_PANEL
 	OLED_Refresh();
 	#endif
+	#ifdef SPI_OLED_0P96_BW_PANEL
+	SPI_OLED_Refresh();
+	#endif
 }
 
 void mic_apply_demo_only_ff_dot(void)
@@ -2036,7 +2048,7 @@ void mic_apply_demo_only_ff_dot(void)
 	u8 bar_w_cnt;
 	u16 offset;
 	u16 i_offset;
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	//OLED_Clear_Buff();
 	#endif
 	#ifdef OLED_0P96_COLOR_PANEL
@@ -2057,7 +2069,7 @@ void mic_apply_demo_only_ff_dot(void)
 	{
 		cur_fft_val = (u8)xFFT_out[i];
 		e_cur_fft_val = cur_fft_val;
-		#ifdef OLED_0P96_BW_PANEL
+		#ifdef OLED_0P96_BW_DRAW_OP
 		if(cur_fft_val >= C_SHOW_POS_LIMIT)
 		{
 			cur_fft_val = C_SHOW_POS_LIMIT;
@@ -2075,7 +2087,7 @@ void mic_apply_demo_only_ff_dot(void)
 			e_cur_fft_val = B_SHOW_POS_LIMIT;
 		}
 		#endif
-		#ifdef OLED_0P96_BW_PANEL
+		#ifdef OLED_0P96_BW_DRAW_OP
 		offset = 127 - i*bar_width;
 		#endif
 		#ifdef OLED_0P96_COLOR_PANEL
@@ -2095,7 +2107,7 @@ void mic_apply_demo_only_ff_dot(void)
 			//ST7735_DrawVertical_Column((i_offset-bar_w_cnt),0,0,RGB565_Black);
 			ST7735_DrawPoint((i_offset-bar_w_cnt),(u8)falling_y_pos[i],RGB565_Blue);
 			#endif
-			#ifdef OLED_0P96_BW_PANEL
+			#ifdef OLED_0P96_BW_DRAW_OP
 			OLED_DrawX_dot((offset-bar_w_cnt),0,(u8)falling_y_pos[i]);
 			//OLED_DrawY_dot((offset-bar_w_cnt),0,(u8)flying_y_pos[i]);
 			#endif
@@ -2196,7 +2208,7 @@ void mic_apply_demo_only_ff_dot(void)
 	SSD1351_WriteChar_8x16(120,64,afft_idx[fft_proc_mode],RGB565_Lgray,RGB565_Black);
 #endif
 
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	#ifdef DISP_FRAME_RATIO_30HZ
 	OLED_ShowCharR_8x16(120,48,'3');
 	OLED_ShowCharR_8x16(112,48,'0');
@@ -2235,6 +2247,9 @@ void mic_apply_demo_only_ff_dot(void)
 	#ifdef OLED_0P96_BW_PANEL
 	OLED_Refresh();
 	#endif
+	#ifdef SPI_OLED_0P96_BW_PANEL
+	SPI_OLED_Refresh();
+	#endif
 }
 
 void mic_apply_demo_fft_wav(void)
@@ -2248,7 +2263,7 @@ void mic_apply_demo_fft_wav(void)
 
 	u16 sx,sy;
 
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	OLED_Clear_Buff();
 	#endif
 	#ifdef OLED_0P96_COLOR_PANEL
@@ -2266,7 +2281,7 @@ void mic_apply_demo_fft_wav(void)
 	{
 		sy = SHOW_POS_LIMIT;
 	}
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	sx = 127;
 	//draw first dot
 	OLED_DrawPoint(sx,sy);
@@ -2294,7 +2309,7 @@ void mic_apply_demo_fft_wav(void)
 		{
 			//draw line
 			offset = 128 - i*line_length;
-			#ifdef OLED_0P96_BW_PANEL
+			#ifdef OLED_0P96_BW_DRAW_OP
 			//offset = 128 - i*line_length;
 			OLED_DrawLine(sx,sy,offset,cur_fft_val);
 			#endif
@@ -2321,7 +2336,7 @@ void mic_apply_demo_fft_wav(void)
 	}
 	//offset = 128 - line_length;
 	//draw first dot
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	sx = 127;
 	OLED_DrawPoint(sx,sy);
 	#endif
@@ -2357,7 +2372,7 @@ void mic_apply_demo_fft_wav(void)
 		{
 			//draw line
 			offset = 128 - i*line_length;
-			#ifdef OLED_0P96_BW_PANEL
+			#ifdef OLED_0P96_BW_DRAW_OP
 			//offset = 128 - i*line_length;
 			OLED_DrawLine(sx,sy,offset,cur_fft_val);
 			#endif
@@ -2383,12 +2398,15 @@ void mic_apply_demo_fft_wav(void)
 	#ifdef OLED_0P96_COLOR_PANEL
 	draw_freq_info_y();
 	#endif
-	#ifdef OLED_0P96_BW_PANEL
+	#ifdef OLED_0P96_BW_DRAW_OP
 	draw_freq_info_x();
 	#endif
 
 #ifdef OLED_0P96_BW_PANEL
 	OLED_Refresh();
+#endif
+#ifdef SPI_OLED_0P96_BW_PANEL
+	SPI_OLED_Refresh();
 #endif
 }
 
